@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<thing:thing-descriptions bindingId="zigbee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:thing="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0"
+        xsi:schemaLocation="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0 http://eclipse.org/smarthome/schemas/thing-description-1.0.0.xsd">
+
+    <!-- Sample Thing Type -->
+    <thing-type id="sample">
+        <label>ZigBee Binding Thing sample</label>
+        <description>Sample thing for ZigBee Binding</description>
+
+        <channels>
+            <channel id="samplechannel" typeId="samplechannel"/>
+        </channels>
+    </thing-type>
+    
+    <thing-type id="onofftest">
+        <label>ZigBee Binding Thing onofftest</label>
+        <description>Sample thing for ZigBee onofftest</description>
+
+        <channels>
+            <channel id="onoffcluster" typeId="onoffcluster"/>
+            <channel id="samplechannel" typeId="samplechannel"/>
+        </channels>
+    </thing-type>
+    
+    <thing-type id="0x0009">
+        <label>ZigBee Mains Power Outlet Device</label>
+        <description>ZigBee Mains Power Outlet Device</description>
+        
+        <channels>
+            <channel id="onoffcluster" typeId="onoffcluster"/>
+        </channels>
+
+        <config-description>
+	    	<parameter name="uid64" type="text">
+				<label>UID64</label>
+				<description>UID64 of ZigBee Node</description>
+				<required>true</required>
+			</parameter>
+			<parameter name="nwa" type="text">
+				<label>Network Address</label>
+				<description>Network Address of ZigBee Node</description>
+			<required>true</required>
+		</parameter>
+		</config-description>
+    </thing-type>
+
+    <!-- Sample Channel Type -->
+    <channel-type id="samplechannel">
+        <item-type>Switch</item-type>
+        <label>ZigBee sample channel Switch</label>
+        <description>fakes a virtual switch for ZigBee Binding</description>
+    </channel-type>
+    
+    <channel-type id="onoffcluster">
+	    <item-type>Switch</item-type>
+	    <label>ZigBee onoff clusterSwitch</label>
+	    <description>ZigBee onoff cluster</description>
+    </channel-type>
+
+</thing:thing-descriptions>

@@ -1,0 +1,5 @@
+zigbee:bridge:telegesis [ serialPort="COM9", baud=19200 ]
+zigbee:sample:FSchalter0
+zigbee:sample:FSchalter1
+zigbee:onofftest:FSchalterOnff
+zigbee:0x0009:Bitron0 [ uid="00124B0002F5254D", nwa="ABCDEF"]
