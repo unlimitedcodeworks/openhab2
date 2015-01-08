@@ -7,10 +7,13 @@
  */
 package org.openhab.binding.zigbee.internal;
 
-import static org.openhab.binding.zigbee.ZigBeeBindingConstants.*;
+import static org.openhab.binding.zigbee.ZigBeeBindingConstants.BRIDGE_UID64;
+import static org.openhab.binding.zigbee.ZigBeeBindingConstants.NODE_UID64;
+import static org.openhab.binding.zigbee.ZigBeeBindingConstants.NODE_ENDPOINT;
 
 import java.util.Collections;
 import java.util.Set;
+
 
 
 import org.openhab.binding.zigbee.handler.ZigBeeHandler;
@@ -27,6 +30,8 @@ import org.eclipse.smarthome.core.thing.ThingUID;
 import org.eclipse.smarthome.core.thing.binding.BaseThingHandlerFactory;
 import org.eclipse.smarthome.core.thing.binding.ThingHandler;
 
+import com.google.common.collect.Sets;
+
 /**
  * The {@link ZigBeeHandlerFactory} is responsible for creating things and thing 
  * handlers.
@@ -34,47 +39,69 @@ import org.eclipse.smarthome.core.thing.binding.ThingHandler;
  * @author Christian Arlt - Initial contribution
  */
 public class ZigBeeHandlerFactory extends BaseThingHandlerFactory {
-	//private final static Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = Collections.singleton(THING_TYPE_SAMPLE);
+
+	public final static Set<ThingTypeUID> SUPPORTED_THING_TYPES = Sets.union(
+			ZigBeeBridgeHandler.SUPPORTED_THING_TYPES,
+			ZigBeeHandler.SUPPORTED_THING_TYPES);
 
 	private Logger logger = LoggerFactory.getLogger(ZigBeeHandlerFactory.class);
-
-	@Override
-	public boolean supportsThingType(ThingTypeUID thingTypeUID) {
-		logger.info("----------- ZigBeeHandlerFactory supportsThingType! - info" + ", type: " + thingTypeUID);
-		return true;
-		//return (SUPPORTED_THING_TYPES_UIDS.contains(thingTypeUID) || THING_TYPE_BRIDGE.equals(thingTypeUID));
-	}
 
 
 	@Override
 	public Thing createThing(ThingTypeUID thingTypeUID, Configuration configuration,
 			ThingUID thingUID, ThingUID bridgeUID) {
-				
+
 		if (ZigBeeBridgeHandler.SUPPORTED_THING_TYPES.contains(thingTypeUID)) {
 			ThingUID zigBeeBridgeUID = getBridgeThingUID(thingTypeUID, thingUID, configuration);
-			
-			logger.info("----------- ZigBeeHandlerFactory createThing! - info" + ", type: " + thingTypeUID + ", serialport: " + (String) configuration.get("serialPort") + ", baud: " + configuration.get("baud"));
-			
+
+			logger.debug("----------- ZigBeeHandlerFactory createThing(): "
+					+ "type: " + thingTypeUID
+					+ ", serialport: " + (String) configuration.get("serialPort")
+					+ ", baud: " + configuration.get("baud")
+					+ ", thingUID: " + thingUID
+					+ ", zigBeeBridgeUID: " + zigBeeBridgeUID 
+					);
+
 			return super.createThing(thingTypeUID, configuration, zigBeeBridgeUID, null);
 		}
-		
-		if (SUPPORTED_THING_TYPES_UIDS.contains(thingTypeUID)) {
-			//ThingUID hueLightUID = getLightUID(thingTypeUID, thingUID, configuration, bridgeUID);
-			logger.info("----------- ZigBeeHandlerFactory createThing! - info" + ", type: " + thingTypeUID + ", uid64: " + (String) configuration.get("uid64") + ", nwa: " + (String) configuration.get("nwa"));
-			return super.createThing(thingTypeUID, configuration, thingUID, bridgeUID);
+
+		if (ZigBeeHandler.SUPPORTED_THING_TYPES.contains(thingTypeUID)) {
+			ThingUID nodeUID64 = getNodeUID(thingTypeUID, thingUID, configuration, bridgeUID);
+
+			logger.debug("----------- ZigBeeHandlerFactory createThing: "
+					+ "type: " + thingTypeUID
+					+ ", uid64: " + (String) configuration.get("uid64")
+					+ ", endpoint: " + (String) configuration.get("endpoint")
+					+ ", thingUID: " + thingUID
+					+ ", zigBeeBridgeUID: " + bridgeUID 					
+					);
+			return super.createThing(thingTypeUID, configuration, nodeUID64, bridgeUID);
 		}
-		
+
 		throw new IllegalArgumentException("The thing type " + thingTypeUID
 				+ " is not supported by the hue binding.");
 	}
 
-
+	@Override
+	public boolean supportsThingType(ThingTypeUID thingTypeUID) {
+		logger.debug("----------- ZigBeeHandlerFactory supportsThingType()");
+		return SUPPORTED_THING_TYPES.contains(thingTypeUID);
+	}
 
 	private ThingUID getBridgeThingUID(ThingTypeUID thingTypeUID, ThingUID thingUID,
 			Configuration configuration) {
 		if (thingUID == null) {
-			//String serialNumber = (String) configuration.get(SERIAL_NUMBER);
-			thingUID = new ThingUID(thingTypeUID, "TESTID");
+			String bridgeUID64 = (String) configuration.get(BRIDGE_UID64);
+			thingUID = new ThingUID(thingTypeUID, bridgeUID64);
+		}
+		return thingUID;
+	}
+
+	private ThingUID getNodeUID(ThingTypeUID thingTypeUID, ThingUID thingUID,
+			Configuration configuration, ThingUID bridgeUID) {
+		String nodeUID64 = (String) configuration.get(NODE_UID64);
+		if (thingUID == null) {
+			thingUID = new ThingUID(thingTypeUID, nodeUID64, bridgeUID.getId());
 		}
 		return thingUID;
 	}
@@ -83,18 +110,25 @@ public class ZigBeeHandlerFactory extends BaseThingHandlerFactory {
 	@Override
 	protected ThingHandler createHandler(Thing thing) {
 
-		logger.info("----------- ZigBeeHandlerFactory createHandler! - info");
+		logger.debug("----------- ZigBeeHandlerFactory createHandler!");
 
 		if (ZigBeeBridgeHandler.SUPPORTED_THING_TYPES.contains(thing.getThingTypeUID())) {
 			ZigBeeBridgeHandler handler = new ZigBeeBridgeHandler((Bridge) thing);
 			//registerLightDiscoveryService(handler);
-			logger.info("            --------- do ZigBeeBridgeHandler! - info" + ", thing is: "+thing.getThingTypeUID());
+			logger.debug("----------- ----> ZigBeeHandlerFactory createHandler: bridge" + ", thing is: "+thing.getThingTypeUID());
 			return handler;
-		} else if (supportsThingType(thing.getThingTypeUID())) {
-			logger.info("            --------- do ZigBeeHandler! - info" + ", thing is: "+thing.getThingTypeUID());
+		} else if (ZigBeeHandler.SUPPORTED_THING_TYPES.contains(thing.getThingTypeUID())) {
+			logger.debug("----------- ----> ZigBeeHandlerFactory createHandler: normal Thing" + ", thing is: "+thing.getThingTypeUID());
 			return new ZigBeeHandler(thing);
 		} else {
 			return null;
+		}
+	}
+
+	@Override
+	protected synchronized void removeHandler(ThingHandler thingHandler) {
+		if (thingHandler instanceof ZigBeeBridgeHandler) {
+			super.removeHandler(thingHandler);
 		}
 	}
 }

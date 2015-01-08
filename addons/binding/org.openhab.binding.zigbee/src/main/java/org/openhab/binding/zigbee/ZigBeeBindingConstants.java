@@ -24,19 +24,22 @@ public class ZigBeeBindingConstants {
     public static final String BINDING_ID = "zigbee";
     
     // List of all Thing Type UIDs
-    public final static ThingTypeUID THING_TYPE_SAMPLE = new ThingTypeUID(BINDING_ID, "sample");
-    public final static ThingTypeUID THING_TYPE_ONOFFTEST = new ThingTypeUID(BINDING_ID, "onofftest");
-    public final static ThingTypeUID THING_TYPE_0X0009 = new ThingTypeUID(BINDING_ID, "0x0009");
     public final static ThingTypeUID THING_TYPE_BRIDGE = new ThingTypeUID(BINDING_ID, "bridge");
+    public final static ThingTypeUID THING_TYPE_SAMPLE = new ThingTypeUID(BINDING_ID, "sample");
+    public final static ThingTypeUID THING_TYPE_0X0009 = new ThingTypeUID(BINDING_ID, "0x0009");    
     
     // List of all Channel ids
-    public final static String CHANNEL_SAMPLECHANNEL = "samplechannel";
-    public final static String CHANNEL_ONOFFCLUSTERCHANNEL = "onoffcluster";
+    public final static String CHANNEL_SAMPLE = "samplechannel";
+    public final static String CHANNEL_ONOFFCLUSTER = "onoffcluster";
     
+    // Bridge config properties
+    public static final String BRIDGE_SERIALPORT = "serialport";
+    public static final String BRIDGE_BAUD = "baud";
+    public static final String BRIDGE_UID64 = "uid64";
+    //public static final String BRIDGE_UID64 = "000D6F0003E37C7A";
     
-    
-    public final static Collection<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = Lists.newArrayList(
-    		THING_TYPE_SAMPLE,THING_TYPE_0X0009,THING_TYPE_ONOFFTEST);
-    
+	 // Light config properties
+    public static final String NODE_UID64 = "uid64";
+	public static final String NODE_ENDPOINT = "endpoint";
     
 }

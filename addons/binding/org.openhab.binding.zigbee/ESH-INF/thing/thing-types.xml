@@ -6,6 +6,10 @@
 
     <!-- Sample Thing Type -->
     <thing-type id="sample">
+ 		<supported-bridge-type-refs>
+			<bridge-type-ref id="bridge" />
+		</supported-bridge-type-refs>
+        
         <label>ZigBee Binding Thing sample</label>
         <description>Sample thing for ZigBee Binding</description>
 
@@ -14,17 +18,11 @@
         </channels>
     </thing-type>
     
-    <thing-type id="onofftest">
-        <label>ZigBee Binding Thing onofftest</label>
-        <description>Sample thing for ZigBee onofftest</description>
-
-        <channels>
-            <channel id="onoffcluster" typeId="onoffcluster"/>
-            <channel id="samplechannel" typeId="samplechannel"/>
-        </channels>
-    </thing-type>
-    
     <thing-type id="0x0009">
+     	<supported-bridge-type-refs>
+			<bridge-type-ref id="bridge" />
+		</supported-bridge-type-refs>
+        
         <label>ZigBee Mains Power Outlet Device</label>
         <description>ZigBee Mains Power Outlet Device</description>
         
@@ -38,11 +36,11 @@
 				<description>UID64 of ZigBee Node</description>
 				<required>true</required>
 			</parameter>
-			<parameter name="nwa" type="text">
-				<label>Network Address</label>
-				<description>Network Address of ZigBee Node</description>
-			<required>true</required>
-		</parameter>
+			<parameter name="endpoint" type="text">
+				<label>EndPoint</label>
+				<description>Endpoint containing the cluster on ZigBee Node</description>
+				<required>true</required>
+			</parameter>
 		</config-description>
     </thing-type>
 

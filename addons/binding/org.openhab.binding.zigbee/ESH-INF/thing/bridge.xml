@@ -9,10 +9,6 @@
         <label>ZigBee Bridge</label>
         <description>The ZigBee bridge represents the ZigBee bridge.</description>
 
-	    <channels>
-            <channel id="network_onoff" typeId="network_onoff"/>
-        </channels>
-
         <config-description>
         	<parameter name="serialPort" type="text">
 				<context>serial_port</context>
@@ -26,13 +22,13 @@
 				<description>Baudrate of used serial port</description>
 				<required>true</required>
 			</parameter>
+			<parameter name="uid64" type="text">
+				<context>node</context>
+				<label>UID64</label>
+				<description>UID64 of bridge</description>
+				<required>true</required>
+			</parameter>			
         </config-description>
     </bridge-type>
-	
-	<channel-type id="network_onoff">
-        <item-type>Switch</item-type>
-        <label>Enable/Disable Network</label>
-        <description>Enables or Disables the ZigBee Network</description>
-    </channel-type>
-	
+
 </thing:thing-descriptions>

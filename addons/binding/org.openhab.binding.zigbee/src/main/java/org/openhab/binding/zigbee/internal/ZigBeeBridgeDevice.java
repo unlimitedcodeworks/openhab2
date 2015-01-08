@@ -14,7 +14,8 @@ public interface ZigBeeBridgeDevice {
 
 	public void enableNetwork();
 	public void disableNetwork();
-	
-	public void sendZCLCommand(int profile, int cluster, int cmd, int values);	
+		
+	public void sendZCLCommand(int profile, String address, String endPoint, int cluster, int cmd, int values);
+	public void poll();
 	
 }
